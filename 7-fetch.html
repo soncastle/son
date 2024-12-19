@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+
+        /*
+        fetch(주소, 옵션)
+        -네트워크를 통해 리소스의 요청(request) 및 응답(response)를 처리
+        에이젝스 그대로!!
+
+        -Promise 객체를 리턴!!
+        비동기상태에서도 순서 보장!!
+        근데 너무 오래 걸리면 계속 기달리나??? ㅇㅇ!
+        */
+
+        document.getElementById("dataForm").addEventListener('submit',
+            (event)=>{
+                event.preventDefault();// 서버로 전달(서블릿 작동)하는 것 비활성화
+        
+            const strname = document.getElementById("name").value;
+            const strage = document.getElementById("age").value;
+            const straddr = document.getElementById("addr").value;
+        //원래는 xml http로 했으나 트랜드하게~
+
+            const reqData = {
+                name : strname,
+                age : parseInt(strage), // 숫자로 전달하기
+                addr : straddr
+            }
+
+/*
+            fetch('http://localhost:8080/ajaxProject/fetchData', {
+                method : 'POST', //저장, 양 많을 때 이 방식!
+                headers : {'Content-Type' : 'application/json'}, // json으로 보낸다는 것 알려주기  - mime type 정해져 있는 타입임!!
+                body : JSON.stringify(reqData)    //근데 보내는 것은 무조건 문자열로만 가므로!!
+            })// ,{}-> 옵션 추가json 표기법으로!! js니까!
+            .then((response)=>{return response.json()})
+            .then((data)=>{
+                document.getElementById("result").innerHTML = 
+                data.msg + "<br>" + data.todo
+            });
+        });
+*/
+
+// document.getElementById("dataForm").addEventListener('submit',
+//             (event)=>{
+//                 event.preventDefault();// 서버로 전달(서블릿 작동)하는 것 비활성화
+        
+//             const strname = document.getElementById("name").value;
+//             const strage = document.getElementById("age").value;
+
+        axios.post('http://localhost:8080/ajaxProject/fetchData', reqData) //get이면 앞에있는 post 생략!!.  2번째 인자 - 전달할 인자   기본값이 json 이므로 naegod, geaders, body를 거의 쓸 필요가 없음.
+        .then((response)=>{
+            document.getElementById("result").innerHTML = 
+            response.data.msg + "<br>" + response.data.todo   //msg랑 todo는 머지?
+        });
+    });
+     </script>
+</head>
+<body>
+    <h1>서버와 데이터 주고 받기</h1>
+    <form id="dataForm">
+        이름 : <input type="text" id="name" name="name"/><br>
+        나이 : <input type="text" id="age" name="age"/><br>
+        주소 : <input type="text" id="addr" name="addr"/><br>
+        <button>전송</button>
+        <!-- 전송을 하면 공식적으로 전달되기 때문에 자바스크립트로 돌아갈 수 있도록 요청 막아주기! -->
+    </form>
+    <br>
+    <div id="result"></div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //순서 보장 약속!!
+
+    const a = () => {
+        return new Promise((resolve)=>{
+            setTimeout(() => {
+                console.log(1);
+                resolve();
+            }, 500);
+        });// 다음 작업 하는 친구에게도 전달! 인자에서 처리함. 복잡한것들은 promise가!!
+
+    };   
+
+        // setTimeout(()=>{
+        //     console.log(1);    
+        //     callback();
+        // }, 1000);
+
+    const b = (callback) => {
+        return new Promise((resolve)=>{
+            setTimeout(() => {
+                console.log(2);
+                resolve();
+            }, 500);
+        });
+    };   
+
+    const c = (callback) => {
+        return new Promise((resolve)=>{
+            setTimeout(() => {
+                console.log(3);
+                resolve();
+        }, 500);
+        });
+    };   
+
+    const d = () => console.log(4);
+
+    //프라미스 쓰면 .than 사용 가능!! than을 썼다? 프라미스를 썼다고 보면 됨!! 작업 진행 순서대로 가능. than은 앞에서 처리한 내용을 받아서 가져오므로 return 필요!!
+
+    // a().then(() => {
+    //      return b();
+    // }).then(() => {
+    //     return c();
+    // }).then(() => {
+    //     return d();
+    // });
+
+//중괄호와 리턴 생략
+    // a()
+    // .then(() => b())
+    // .then(() => c())
+    // .then(() => d()) // return이 없으니까 중괄호 필요하긴 함 근데 상관없음!!
+//1줄일 때 
+a()
+    .then(b)
+    .then(c)
+    .then(d)
+    .then(()=>console.log("끝"))// return 으로 넘겨받았으니까 마무리 가능!
+
+    // a().then(() => {
+    //     b().then(() => {
+    //       c().then(() => {
+    //             d();
+    //         });
+    //     });
+    // });
+
+    // a(()=>{
+    //     b(()=>{
+    //         c(()=>{
+    //             d(()=>{
+    //             });
+    //         });
+    //     });
+    // });
+
+    const getMovies = (movieName) => {
+        return new Promise((resolve)=>{
+            fetch(`https://www.omdbapi.com/?apikey=7035c60c&s=${movieName}`) // 쌍 따옴표안에 같이 쓰려면 ""이게 아니라 ``이거 써야함!!
+            .then(res=> res.json()) // 매개변수가 1개일 때는 () 생략 가능!! retrun이랑 {}까지 생략 가능? 화살표 함수 문법 보기
+                resolve();
+                });
+            };
+
+        getMovies('frozen')
+            .then(getMovies('avengers'))
+            .then(getMovies('avatar'));
+
+        getMovies('frozen')
+            .then(()=>{console.log("겨울왕국");
+                return getMovies('avengers')
+            })
+            .then(()=>{console.log("어벤저스");
+                return getMovies('avatar')
+            })
+            .then(()=>console.log("아바타"));
+        // getMovies('frozen', () => {console.log("겨울왕국")});
+        // getMovies('avengers', () => {console.log("어벤저스")});
+        // getMovies('avatar', () => {console.log("아바타")});
+
+
+        // getMovies('frozen', () => {
+        //     console.log("겨울왕국");
+        //        getMovies('avengers', () => {
+        //         console.log("어벤저스");
+        //             getMovies('avatar', () => {
+        //             console.log("아바타");
+        //         });
+        //     });
+        // });
+
+</script>
+</head>
+<body>
+</body>
+</html>

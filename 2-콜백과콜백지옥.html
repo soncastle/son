@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+        //대표적인 동기식 코드
+//         const a = () => console.log(1);
+//         const b = () => console.log(2);
+
+//         a();
+//         b();
+// console.log("-----------");
+
+        // //비동기식으로 전환
+        // a = () => {
+        //     setTimeout(()=>{console.log(1)}, 1000);
+        // }
+        // b = () => console.log(2);
+
+        // a();
+        // b();
+
+        // //비동기식 코드를 순서대로 하고자 한다. 콜백함수란 함수 이름을 호출하여 상황에 따라서 알아서 호출하도록 주소값만 넘겨줌
+        // a = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(1);    // 1을 출력하고 나서 call back(); 이 호출 되니까 이후에 2 호출됨     
+        //         callback();
+        //     }, 1000);
+                
+        //     //()=>{b();} 이게 callback이고   b = () => console.log(2); 이게 callback()인가?
+        // }
+        // b = () => console.log(2);
+
+        // a(()=>{b();}); //함수의 인자가 함수로 들어갈 때 대부분 콜백함수를 사용 함수 만들어진 것을 인자에게(callback) 넘겨주는 것 바로 사용X
+        // //함수 자체를 데이터 처럼 전달js만 가능!!
+
+
+        // //c() 함수 작성 후에 b()도 비동기식으로 처리하도록 하자.
+        // a = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(1);    // 1을 출력하고 나서 call back(); 이 호출 되니까 이후에 2 호출됨     
+        //         callback();
+        //     }, 1000);
+                
+        //     //()=>{b();} 이게 callback이고   b = () => console.log(2); 이게 callback()인가?
+        // }
+        // b = () => console.log(2);
+        // const c = () => console.log(3);
+        
+        // a(()=>{b();});
+        // c();
+
+        // //1, 2, 3으로 비동기식으로 출력하기
+
+        // a = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(1);    // 1을 출력하고 나서 call back(); 이 호출 되니까 이후에 2 호출됨     
+        //         callback();
+        //     }, 1000);
+        // };   
+        //     //()=>{b();} 이게 callback이고   b = () => console.log(2); 이게 callback()인가?
+     
+
+        // b = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(2);    // 1을 출력하고 나서 call back(); 이 호출 되니까 이후에 2 호출됨     
+        //         callback();
+        // }, 1000);
+        // };
+        // c = () => console.log(3);
+        
+        // a(()=>{
+        //     b(()=>{
+        //         c();
+        //     });
+        // });
+
+        //1, 2, 3, 4 순서대로 d() 추가하기
+
+        // a = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(1);    
+        //         callback();
+        //     }, 1000);
+        // };   
+        // b = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(2);
+        //         callback();
+        //     }, 1000);
+        // };   
+        // c = (callback) => {
+        //     setTimeout(()=>{
+        //         console.log(3);     
+        //         callback();
+        //     }, 1000);
+        // };   
+
+
+        // const d = () => console.log(4);
+
+        // a(()=>{
+        //     b(()=>{
+        //         c(()=>{
+        //             d(()=>{
+        //             });
+        //         });
+        //     });
+        // });
+
+        const getMovies = (movieName, callback) => {
+            fetch(`https://www.omdbapi.com/?apikey=7035c60c&s=${movieName}`) // 쌍 따옴표안에 같이 쓰려면 ""이게 아니라 ``이거 써야함!!
+            .then(res=> res.json()) // 매개변수가 1개일 때는 () 생략 가능!! retrun이랑 {}까지 생략 가능? 화살표 함수 문법 보기
+            .then((res)=>{
+                console.log(res);
+                callback();
+        });
+        };
+
+        // getMovies('frozen', () => {console.log("겨울왕국")});
+        // getMovies('avengers', () => {console.log("어벤저스")});
+        // getMovies('avatar', () => {console.log("아바타")});
+
+        getMovies('frozen', () => {
+            console.log("겨울왕국");
+               getMovies('avengers', () => {
+                console.log("어벤저스");
+                    getMovies('avatar', () => {
+                    console.log("아바타");
+                });
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+    
+
+
+</body>
+</html>
